@@ -52,15 +52,11 @@ void test_create_destroy(void)
   //Make sure the function pointers are pointing to the correct fuctions
   TEST_ASSERT_TRUE(lst->destroy_data == destroy_data);
   TEST_ASSERT_TRUE(lst->compare_to == compare_to);
-    printf("\tsection 3\n");
   //Make sure we are a circular linked list
   TEST_ASSERT_FALSE(lst->head->next == NULL);
-      printf("\tsection 6\n");
   TEST_ASSERT_FALSE(lst->head->prev == NULL);
   TEST_ASSERT_TRUE(lst->head->next == lst->head->prev);
-    printf("\tsection 4\n");
   list_destroy(&lst);
-      printf("\tsection 5\n");
   TEST_ASSERT_TRUE(lst == NULL);
 }
 
