@@ -6,6 +6,9 @@
 list_t *list_init(void (*destroy_data)(void *), int (*compare_to)(const void *, const void *)) {
     // Create the list
     list_t *list = (list_t *)malloc(sizeof(list_t));
+    if (list == NULL) {
+        return NULL;
+    }
         printf("allocating *list %p\n", (void*)list);
 
     // TODO: Did malloc return NULL?
@@ -14,6 +17,9 @@ list_t *list_init(void (*destroy_data)(void *), int (*compare_to)(const void *, 
     list->compare_to = compare_to; 
     list->size = 0;
     list->head = (node_t *)malloc(sizeof(node_t));
+    if (list->head == NULL) {
+        return NULL;
+    }
         printf("allocating list->head %p\n", (void *)list->head);    
 
     
@@ -48,8 +54,11 @@ void list_destroy(list_t **list) {
     // free((*list)->head->next);
     // free((*list)->head->prev);
     
-        printf("freeing current %p\n", (void *)current);    
-    free(current);
+    //     printf("freeing current %p\n", (void *)current);    
+    // free(current);
+    printf("freeing list->head %p\n", (void *)(*list)->head);    
+    free((*list)->head);    
+
 
 
     //free((*list)->head);
@@ -67,7 +76,10 @@ void list_destroy(list_t **list) {
 
 list_t *list_add(list_t *list, void *data) {
     node_t *new_node = (node_t *)malloc(sizeof(node_t));
-            printf("allocating new_node %p\n", (void *)new_node);    
+    if (new_node == NULL) {
+        return NULL;
+    }
+    printf("allocating new_node %p\n", (void *)new_node);    
 
     // TODO: Did malloc return NULL?
     new_node->data = data;
@@ -104,9 +116,9 @@ void *list_remove_index(list_t *list, size_t index) {
     }
     node_t *current = list->head->next;
     for (int i = 0; (size_t)i < index; i++) {
-        if (current == NULL) {
-            return NULL;
-        }
+        // if (current == NULL) {
+        //     return NULL;
+        // }
         current = current->next;
     }
     // Current now points to node to remove
@@ -117,18 +129,22 @@ void *list_remove_index(list_t *list, size_t index) {
     list->size--;
 
     void *data_copy = malloc(sizeof(int)); 
-            printf("allocating data_copy %p\n", (void *)data_copy);    
- // Assuming stored data is an int
+    // Assuming stored data is an int
     if (data_copy == NULL) {
         printf("Data_copy was null\n");
-        free(data_copy);
-        return NULL;  // Memory allocation failed
+        // free(data_copy);
+        return NULL; 
     }
+    printf("allocating data_copy %p\n", (void *)data_copy);    
+
 
     *(int *)data_copy = *(int *)(current->data);
     list->destroy_data(current->data);
+    printf("freeing %p\n", (void*)current);
     free(current);
-    printf("freeing %d\n", current);
+    printf("freeing data_copy %p\n", (void *)data_copy);    
+    // free(data_copy);
+
     return data_copy;
 }
 
