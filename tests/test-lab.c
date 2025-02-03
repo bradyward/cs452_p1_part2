@@ -240,6 +240,49 @@ void test_notInList(void)
   free(data);
 }
 
+void test_remove_add(void) {
+    populate_list();
+    int *data = list_remove_index(lst_, 0);
+    TEST_ASSERT_EQUAL(4, lst_->size);
+    free(data);
+    list_add(lst_, alloc_data(10));
+    TEST_ASSERT_EQUAL(5, lst_->size);
+}
+
+void test_add_remove(void) {
+    populate_list();
+    int *data = alloc_data(10);
+    list_add(lst_, data);
+    TEST_ASSERT_EQUAL(6, lst_->size);
+    data = list_remove_index(lst_, 5);
+    TEST_ASSERT_EQUAL(5, lst_->size);
+    free(data);
+}
+
+void test_remove_all_add(void) {
+    populate_list();
+    for (int i = 0; i < 5; i++) {
+        int *data = list_remove_index(lst_, 0);
+        free(data);
+    }
+    TEST_ASSERT_EQUAL(0, lst_->size);
+    list_add(lst_, alloc_data(10));
+    TEST_ASSERT_EQUAL(1, lst_->size);
+}
+
+void test_add_large_amount(void) {
+    for (int i = 0; i < 100; i++) {
+        list_add(lst_, alloc_data(i));
+    }
+    TEST_ASSERT_EQUAL(100, lst_->size);
+    int *first = list_get(lst_, 0);
+    int *middle = list_get(lst_, 49);
+    int *last = list_get(lst_, 99);
+    TEST_ASSERT_EQUAL(0, *first);
+    TEST_ASSERT_EQUAL(49, *middle);
+    TEST_ASSERT_EQUAL(99, *last);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_create_destroy);
@@ -253,5 +296,10 @@ int main(void) {
   RUN_TEST(test_indexOf0);
   RUN_TEST(test_indexOf3);
   RUN_TEST(test_notInList);
+  // My additions
+  RUN_TEST(test_remove_add);
+  RUN_TEST(test_add_remove);
+  RUN_TEST(test_remove_all_add);
+  RUN_TEST(test_add_large_amount);
   return UNITY_END();
 }
