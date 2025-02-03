@@ -51,32 +51,17 @@ list_t *list_add(list_t *list, void *data) {
         return NULL;
     }
     new_node->data = data;
-    // Addition when list is empty
-    if (list->size == (size_t)0) {
-        list->head->next = new_node;
-        list->head->prev = new_node;
-        new_node->next = list->head;
-        new_node->prev = list->head;
-        list->size++;
-        return list;
-    }
-    else {
-        node_t *front = list->head->next; // Pointer to "front" of the list
-        // Add the new node to the front, pointing to the sentinel node
-        new_node->prev = list->head;
-        new_node->next = front;
-        // Connect the sentinel node to the new node
-        front->prev = new_node;
-        list->head->next = new_node;
-        // Return the list
-        list->size++;
-        return list;
-    }
+    new_node->next = list->head->next;
+    new_node->prev = list->head;
+    list->head->next->prev = new_node;
+    list->head->next = new_node;
+    list->size++;
+    return list;
 }
 
 void *list_remove_index(list_t *list, size_t index) {
     // Ensure index is in bounds
-    if ((size_t)index >= list->size || index < (size_t)0) {
+    if ((size_t)index >= list->size) {
         return NULL;
     }
     // Find the node to be removed
@@ -84,8 +69,7 @@ void *list_remove_index(list_t *list, size_t index) {
     for (int i = 0; (size_t)i < index; i++) {
         current = current->next;
     }
-    // Current now points to node to remove
-    // Disconnect current from the list
+    // Disconnect "current" from the list
     current->prev->next = current->next;
     current->next->prev = current->prev;
     // Destroy current

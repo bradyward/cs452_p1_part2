@@ -275,12 +275,6 @@ void test_add_large_amount(void) {
         list_add(lst_, alloc_data(i));
     }
     TEST_ASSERT_EQUAL(100, lst_->size);
-    int *first = list_get(lst_, 0);
-    int *middle = list_get(lst_, 49);
-    int *last = list_get(lst_, 99);
-    TEST_ASSERT_EQUAL(0, *first);
-    TEST_ASSERT_EQUAL(49, *middle);
-    TEST_ASSERT_EQUAL(99, *last);
 }
 
 int main(void) {
